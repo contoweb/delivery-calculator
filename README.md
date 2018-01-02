@@ -33,7 +33,7 @@ Function 2: Given date is in business time?
 $isBusinessTime = $newDeliveryTime->isBusinessTime($orderDateTime);
 ```
 
-Input a start_date (eg. `2017-12-24`) and an end_date (eg. `2017-12-26`) into Holiday table to manage your holidays.
+Input a start_date (eg. `2017-12-24`) and end_date (eg. `2017-12-26`) into Holiday table to manage your holidays.
 
 ## Built With
 

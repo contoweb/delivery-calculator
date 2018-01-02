@@ -1,0 +1,19 @@
+{
+    "name": "contoweb/delivery-calculator",
+    "description": "Calculate a date time by providing the start date time and a duration in hours",
+    "require": {
+        "nesbot/carbon": "^1.22"
+    },
+    "authors": [
+        {
+            "name": "Matthias Martin",
+            "email": "matthias.martin@contoweb.ch"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Contoweb\\DeliveryCalculator\\": "packages/contoweb/delivery-calculator/src"
+        }
+	}
+}

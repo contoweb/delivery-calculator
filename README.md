@@ -23,17 +23,18 @@ php artisan migrate
 
 Function 1: Calculate the end date-time with start-date and duration
 ```
-// Send Carbon\Carbon date time object and duration as integer
-$deliveryDateTime = $newDeliveryTime->getDeliveryTime($orderDateTime, $duration); 
+// Send Carbon\Carbon date-time object and $duration as integer
+$deliveryDateTime = $newDeliveryTime->getDeliveryTime(Carbon::now(), $duration); 
 ```
 
 Function 2: Given date is in business time?
 ```
-// Send Carbon\Carbon date time object
-$isBusinessTime = $newDeliveryTime->isBusinessTime($orderDateTime);
+// Send Carbon\Carbon date-time object
+$isBusinessTime = $newDeliveryTime->isBusinessTime(Carbon::now());
 ```
 
 Input a start_date (eg. `2017-12-24`) and end_date (eg. `2017-12-26`) into Holiday table to manage your holidays.
+For a single holiday just input the same date for both fields. 
 
 ## Built With
 

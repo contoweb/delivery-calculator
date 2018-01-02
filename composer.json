@@ -6,8 +6,8 @@
     },
     "authors": [
         {
-            "name": "Matthias Martin",
-            "email": "matthias.martin@contoweb.ch"
+            "name": "contoweb AG",
+            "email": "info@contoweb.ch"
         }
     ],
     "minimum-stability": "dev",

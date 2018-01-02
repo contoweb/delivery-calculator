@@ -1,17 +1,15 @@
-# Delivery Calculator
+# Delivery Calculator for Laravel
 
-One Paragraph of project description goes here
+Calculate a date time by providing the start date time and a duration in hours.
 
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
 ### Prerequisites
-
-What things you need to install the software and how to install them
-
 ```
-Give examples
+Laravel
+Carbon
 ```
 
 ### Installing

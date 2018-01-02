@@ -5,7 +5,7 @@ Calculate a date-time by providing a start date-time and a duration in hours con
 ## Getting Started
 
 The package is also available on Packagist:
-* <http://www.dropwizard.io/1.0.2/docs/>
+* <https://packagist.org/packages/contoweb/delivery-calculator>
 
 ### Installing
 

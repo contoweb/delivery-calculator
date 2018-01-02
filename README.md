@@ -1,6 +1,6 @@
 # Delivery Calculator for Laravel
 
-Calculate a date-time by providing a start date-time and a duration in hours considering weekends and defined holidays in holidays table.
+Calculate a date-time by providing a start date-time and a duration in hours considering weekends and defined holidays.
 
 ## Getting Started
 

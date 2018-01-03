@@ -9,6 +9,7 @@
     "require": {
         "nesbot/carbon": "^1.22"
     },
+    "license": "MIT",
     "authors": [
         {
             "name": "contoweb AG",
@@ -29,6 +30,5 @@
         }
     },
     "minimum-stability": "dev",
-    "prefer-stable": true,
-    "license": "MIT"
+    "prefer-stable": true
 }

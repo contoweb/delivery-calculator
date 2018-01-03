@@ -4,8 +4,9 @@ Calculate a date-time by providing a start date-time and a duration in hours con
 
 ## Getting Started
 
-The package is also available on Packagist:
+The package is available on Packagist and GitHub:
 * <https://packagist.org/packages/contoweb/delivery-calculator>
+* <https://github.com/contoweb/delivery-calculator>
 
 ### Installing
 

@@ -15,7 +15,7 @@ With composer
 composer require contoweb/delivery-calculator
 ```
 
-Migrate Holiday table
+Migrate holidays table
 ```
 php artisan migrate
 ```
@@ -41,6 +41,8 @@ Function 2: Given date (Carbon) is in business time?
 ```
 $isBusinessTime = $newDeliveryCalculation->isBusinessTime(Carbon::now());
 ```
+
+## Insert holidays
 
 Input a start_date (eg. `2017-12-24`) and end_date (eg. `2017-12-26`) into Holiday table to manage your holidays.
 For a single holiday just input the same date for both fields. 

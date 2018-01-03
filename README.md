@@ -44,7 +44,7 @@ $isBusinessTime = $deliveryCalculation->isBusinessTime(Carbon::now());
 
 #### Define holidays
 
-Enter a start_date (eg. `2017-12-24`) and end_date (eg. `2017-12-26`) into the `holiday` table to define holidays.
+Enter a start_date (eg. `2017-12-24`) and end_date (eg. `2017-12-26`) into the `holidays` table to define holidays.
 For a single holiday just enter the same date for both fields. 
 
 ## Built With

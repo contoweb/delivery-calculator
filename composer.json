@@ -1,6 +1,11 @@
 {
     "name": "contoweb/delivery-calculator",
     "description": "Calculate a date time by providing the start date time and a duration in hours",
+    "keywords": [
+        "laravel",
+        "delivery",
+        "calculation"
+    ],
     "require": {
         "nesbot/carbon": "^1.22"
     },
@@ -22,5 +27,7 @@
                 "Contoweb\\DeliveryCalculator\\DeliveryCalculatorServiceProvider"
             ]
         }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

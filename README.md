@@ -21,16 +21,24 @@ php artisan migrate
 
 ### How to use
 
-Function 1: Calculate the end date-time with start-date and duration
+Use class
 ```
-// Send Carbon\Carbon date-time object and $duration as integer
-$deliveryDateTime = $newDeliveryTime->getDeliveryTime(Carbon::now(), $duration); 
+use Contoweb\DeliveryCalculator\DeliveryCalculator;
 ```
 
-Function 2: Given date is in business time?
+Initialize with start (eg. 05:45) and end time (eg. 23:00)
 ```
-// Send Carbon\Carbon date-time object
-$isBusinessTime = $newDeliveryTime->isBusinessTime(Carbon::now());
+$newDeliveryCalculation = new DeliveryCalculator(5, 45, 23, 0);
+```
+
+Function 1: Calculate the end date-time with start-date (Carbon date) and duration (integer in hours)
+```
+$deliveryDateTime = $newDeliveryCalculation->getDeliveryTime(Carbon::now(), $duration); 
+```
+
+Function 2: Given date (Carbon) is in business time?
+```
+$isBusinessTime = $newDeliveryCalculation->isBusinessTime(Carbon::now());
 ```
 
 Input a start_date (eg. `2017-12-24`) and end_date (eg. `2017-12-26`) into Holiday table to manage your holidays.

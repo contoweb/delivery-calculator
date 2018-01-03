@@ -39,6 +39,11 @@ class DeliveryCalculator
 		$startTime = new Carbon($actualTime->setTime($this->startHour, $this->startMinute, 0));
 		$endTime = new Carbon($actualTime->setTime($this->endHour, $this->endMinute, 0));
 
+		$holidays = $this->getHolidays();
+
+		if ($orderDateTime->isWeekend() || in_array($orderDateTime->toDateString(), $holidays))
+			return false;
+
 		if ($startTime > $orderDateTime || $endTime <= $orderDateTime)
 			return false;
 
@@ -54,13 +59,7 @@ class DeliveryCalculator
 	 */
     public function getDeliveryTime ($orderDateTime, $duration) {
 
-		// Load holidays from db in array
-		$holidays = [];
-    	$holidayPeriods = Holiday::all();
-    	foreach ($holidayPeriods as $holidayPeriod) {
-	    	$holidays[] = $this->dateRange($holidayPeriod->start_date, $holidayPeriod->end_date);
-		}    	
-		$holidays = array_reduce($holidays, 'array_merge', array()); // Turn into one-dimensional array
+		$holidays = $this->getHolidays();
 		
 		// New Carbon date for calculation
 		$deliveryDateTime = new Carbon($orderDateTime);
@@ -172,5 +171,22 @@ class DeliveryCalculator
 		}
 
 		return $dateTime;
+	}
+
+	/**
+	 * Get Holidays from holidays table
+	 *
+	 * @return array holidays
+	 */
+	private function getHolidays() {
+		// Load holidays from db in array
+		$holidays = [];
+    	$holidayPeriods = Holiday::all();
+
+    	foreach ($holidayPeriods as $holidayPeriod) {
+	    	$holidays[] = $this->dateRange($holidayPeriod->start_date, $holidayPeriod->end_date);
+		}    	
+
+		return array_reduce($holidays, 'array_merge', array()); // Turn into one-dimensional array
 	}
 }

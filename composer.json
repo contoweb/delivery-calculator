@@ -13,7 +13,14 @@
     "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
-            "Contoweb\\DeliveryCalculator\\": "packages/contoweb/delivery-calculator/src"
+            "Contoweb\\DeliveryCalculator\\": "src"
         }
-	}
+	},
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Contoweb\\DeliveryCalculator\\DeliveryCalculatorServiceProvider"
+            ]
+        }
+    }
 }

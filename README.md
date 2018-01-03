@@ -57,4 +57,4 @@ For a single holiday just input the same date for both fields.
 
 ## Authors
 
-* [contoweb](https://contoweb.ch) - *Initial work*
+* [contoweb AG](https://contoweb.ch) - *Initial work*

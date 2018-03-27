@@ -32,7 +32,7 @@ Initialize business hours with start (eg. 05:45) and end time (eg. 23:00)
 $deliveryCalculator = new DeliveryCalculator(5, 45, 23, 0);
 ```
 
-Function 1: Calculate a delivery DateTime by given start DateTime (Carbon date) and the delivery duration (integer in hours)
+Function 1: Calculate a delivery DateTime by given start DateTime (Carbon date) and the delivery duration (double in hours)
 ```
 $deliveryDateTime = $deliveryCalculator->getDeliveryTime(Carbon::now(), $duration); 
 ```

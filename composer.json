@@ -1,6 +1,6 @@
 {
     "name": "contoweb/delivery-calculator",
-    "description": "Calculate a date time by providing the start date time and a duration in hours",
+    "description": "Delivery calculator for Laravel to calculate a date time by providing the start date time and a duration in hours",
     "keywords": [
         "laravel",
         "delivery",
@@ -8,7 +8,7 @@
     ],
     "require": {
         "nesbot/carbon": "^2.0",
-        "illuminate/database": "^6.0"
+        "laravel/framework": ">=7.0.0",
     },
     "require-dev": {
         "phpunit/phpunit": "^6.5" 

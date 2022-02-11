@@ -2,6 +2,7 @@
 
 namespace Contoweb\DeliveryCalculator;
 
+use Carbon\CarbonPeriod;
 use Contoweb\DeliveryCalculator\Holiday;
 use Carbon\Carbon;
 
@@ -98,7 +99,7 @@ class DeliveryCalculator
         // Calculate durations in minutes
         $duration = $duration * 60;
         $durationFullDay = 1440;
-        $durationWorkday = ($this->endHour * 60 + $this->endMinute) - ($this->startHour * 60 + $this->startMinute);
+        $durationWorkday = $this->getWorkdayDurationInMinutes();
         $durationInWorkdays = $duration / $durationWorkday;
         $offTime = $durationFullDay - $durationWorkday;
 
@@ -151,6 +152,102 @@ class DeliveryCalculator
         $deliveryDateTime = $this->skipHolidays($deliveryDateTime, $holidays);
         
         return $deliveryDateTime;
+    }
+
+    /**
+     * Calculates duration in working hours between two given dates (considering business hours, weekends and holidays).
+     *
+     * @param Carbon $startDate
+     * @param Carbon $endDate
+     * @return float
+     */
+    public function getDurationInWorkingHours($startDate, $endDate)
+    {
+        $startDate = new Carbon($startDate);
+        $endDate = new Carbon($endDate);
+
+        $startDateCheck = new Carbon($startDate);
+        $startDateStartCheck = new Carbon($startDateCheck->setTime($this->startHour, $this->startMinute, 0));
+        $startDateEndCheck = new Carbon($startDateCheck->setTime($this->endHour, $this->endMinute, 0));
+
+        if ($startDateStartCheck > $startDate) {
+            $startDate->setTime($this->startHour, $this->startMinute);
+        }
+
+        if ($startDateEndCheck <= $startDate) {
+            $startDate->addDays(1)->setTime($this->startHour, $this->startMinute);
+        }
+
+        $endDateCheck = new Carbon($endDate);
+        $endDateStartCheck = new Carbon($endDateCheck->setTime($this->startHour, $this->startMinute, 0));
+        $endDateEndCheck = new Carbon($endDateCheck->setTime($this->endHour, $this->endMinute, 0));
+
+        if ($endDateStartCheck > $endDate) {
+            $endDate->setTime($this->startHour, $this->startMinute);
+        }
+
+        if ($endDateEndCheck <= $endDate) {
+            $endDate->addDays(1)->setTime($this->startHour, $this->startMinute);
+        }
+
+        // Check if start date is in business time, otherwise set to next business day start time until it is a workday.
+        if (!$this->isBusinessTime($startDate)) {
+            do {
+                $startDate->addDay();
+            } while (!$this->isBusinessTime($startDate));
+        }
+
+        // Check if end date is in business time, otherwise set to next business day start time.
+        if (!$this->isBusinessTime($endDate)) {
+            do {
+                $endDate->addDay();
+            } while (!$this->isBusinessTime($endDate));
+        }
+
+        $datesBetween = CarbonPeriod::create(
+            (new Carbon($startDate))->setTime($this->startHour, $this->startMinute),
+            (new Carbon($endDate))->setTime($this->startHour, $this->startMinute)
+        );
+
+        $workingMinutes = 0;
+
+        // Loop through all dates between start and end date (including start and end date).
+        foreach ($datesBetween->toArray() as $key => $dateBetween) {
+            if ($this->isBusinessTime($dateBetween)) {
+                // First day could have a time between the day, therefore we need to calculate how many hours are left till the end of workday.
+                if ($key === 0) {
+                    $workingMinutes += $dateBetween->setTime($this->endHour, $this->endMinute)->diffInMinutes($startDate);
+
+                    continue;
+                }
+
+                // Last day could have a time between the day, therefore we need to calculate how many hours are left from start of workday.
+                if ($key === array_key_last($datesBetween->toArray())) {
+                    $workingMinutes += Carbon::make($endDate)->diffInMinutes($dateBetween->setTime($this->startHour, $this->startMinute));
+
+                    continue;
+                }
+
+                // Add full workday
+                $workingMinutes += $this->getWorkdayDurationInMinutes();
+            }
+        }
+
+        return $workingMinutes / 60;
+    }
+
+    /**
+     * Calculates duration in working days between two given dates (considering business hours, weekends and holidays).
+     *
+     * @param Carbon $startDate
+     * @param Carbon $endDate
+     * @return float
+     */
+    public function getDurationInWorkingDays($startDate, $endDate)
+    {
+        $workingHours = $this->getDurationInWorkingHours($startDate, $endDate);
+
+        return $workingHours / ($this->getWorkdayDurationInMinutes() / 60);
     }
 
     /**
@@ -217,5 +314,15 @@ class DeliveryCalculator
         }       
 
         return array_reduce($holidays, 'array_merge', array()); // Turn into one-dimensional array
+    }
+
+    /**
+     * Get workday duration in minutes.
+     *
+     * @return float|int
+     */
+    private function getWorkdayDurationInMinutes()
+    {
+        return ($this->endHour * 60 + $this->endMinute) - ($this->startHour * 60 + $this->startMinute);
     }
 }

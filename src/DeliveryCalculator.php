@@ -48,12 +48,12 @@ class DeliveryCalculator
      * @param int $endHour
      * @param int $endMinute
      */
-    public function __construct($startHour, $startMinute, $endHour, $endMinute) 
-    { 
-        $this->startHour = $startHour; 
-        $this->startMinute = $startMinute; 
-        $this->endHour = $endHour; 
-        $this->endMinute = $endMinute; 
+    public function __construct($startHour, $startMinute, $endHour, $endMinute)
+    {
+        $this->startHour = $startHour;
+        $this->startMinute = $startMinute;
+        $this->endHour = $endHour;
+        $this->endMinute = $endMinute;
     }
 
     /**
@@ -63,7 +63,7 @@ class DeliveryCalculator
      * @return boolean
      */
     public function isBusinessTime($orderDateTime)
-    { 
+    {
         // Save current date with business start and end time
         $currentTime = new Carbon($orderDateTime);
         $startTime = new Carbon($currentTime->setTime($this->startHour, $this->startMinute, 0));
@@ -93,7 +93,7 @@ class DeliveryCalculator
     public function getDeliveryTime($orderDateTime, $duration)
     {
         $holidays = $this->getHolidays();
-        
+
         $deliveryDateTime = new Carbon($orderDateTime);
 
         // Calculate durations in minutes
@@ -123,7 +123,7 @@ class DeliveryCalculator
             // Substract durationWorkdays from duration to get the remaining time
             $remainingTime = $duration - floor($durationInWorkdays) * $durationWorkday;
 
-            for ($days = 1; $days <= $durationInWorkdays; $days++) { 
+            for ($days = 1; $days <= $durationInWorkdays; $days++) {
                 $deliveryDateTime->addDays(1);
 
                 $deliveryDateTime = $this->skipHolidays($deliveryDateTime, $holidays);
@@ -147,10 +147,10 @@ class DeliveryCalculator
 
         if ($endTime < $deliveryDateTime)
             $deliveryDateTime->addMinutes($offTime);
-        
+
         // Skip weekend and holidays
         $deliveryDateTime = $this->skipHolidays($deliveryDateTime, $holidays);
-        
+
         return $deliveryDateTime;
     }
 
@@ -207,9 +207,16 @@ class DeliveryCalculator
         $datesBetween = CarbonPeriod::create(
             (new Carbon($startDate))->setTime($this->startHour, $this->startMinute),
             (new Carbon($endDate))->setTime($this->startHour, $this->startMinute)
-        );
+        )->toArray();
 
         $workingMinutes = 0;
+
+        // If there is only one date it means that start and end date are on the same day => Calculate the duration between the two times.
+        if (count($datesBetween) === 1) {
+            $workingMinutes = $startDate->diffInMinutes($endDate);
+
+            return $workingMinutes / 60;
+        }
 
         // Loop through all dates between start and end date (including start and end date).
         foreach ($datesBetween->toArray() as $key => $dateBetween) {
@@ -285,7 +292,7 @@ class DeliveryCalculator
      *
      * @return Carbon\Carbon date time object
      */
-    private function skipHolidays($dateTime, $holidays, $setStartTime = false) 
+    private function skipHolidays($dateTime, $holidays, $setStartTime = false)
     {
         while ($dateTime->isWeekend() || in_array($dateTime->toDateString(), $holidays)) {
             $dateTime->addDays(1);
@@ -311,7 +318,7 @@ class DeliveryCalculator
 
         foreach ($holidayPeriods as $holidayPeriod) {
             $holidays[] = $this->dateRange($holidayPeriod->start_date, $holidayPeriod->end_date);
-        }       
+        }
 
         return array_reduce($holidays, 'array_merge', array()); // Turn into one-dimensional array
     }

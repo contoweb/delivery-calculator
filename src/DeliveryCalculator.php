@@ -229,7 +229,7 @@ class DeliveryCalculator
                 }
 
                 // Last day could have a time between the day, therefore we need to calculate how many hours are left from start of workday.
-                if ($key === array_key_last($datesBetween->toArray())) {
+                if ($key === array_key_last($datesBetween)) {
                     $workingMinutes += Carbon::make($endDate)->diffInMinutes($dateBetween->setTime($this->startHour, $this->startMinute));
 
                     continue;

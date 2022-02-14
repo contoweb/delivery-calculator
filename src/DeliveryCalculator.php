@@ -219,7 +219,7 @@ class DeliveryCalculator
         }
 
         // Loop through all dates between start and end date (including start and end date).
-        foreach ($datesBetween->toArray() as $key => $dateBetween) {
+        foreach ($datesBetween as $key => $dateBetween) {
             if ($this->isBusinessTime($dateBetween)) {
                 // First day could have a time between the day, therefore we need to calculate how many hours are left till the end of workday.
                 if ($key === 0) {

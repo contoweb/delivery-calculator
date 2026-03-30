@@ -224,14 +224,14 @@ class DeliveryCalculator
             if ($this->isBusinessTime($dateBetween)) {
                 // First day could have a time between the day, therefore we need to calculate how many hours are left till the end of workday.
                 if ($key === 0) {
-                    $workingMinutes += $dateBetween->setTime($this->endHour, $this->endMinute)->diffInMinutes($startDate);
+                    $workingMinutes += $startDate->diffInMinutes($dateBetween->setTime($this->endHour, $this->endMinute));
 
                     continue;
                 }
 
                 // Last day could have a time between the day, therefore we need to calculate how many hours are left from start of workday.
                 if ($key === array_key_last($datesBetween)) {
-                    $workingMinutes += Carbon::make($endDate)->diffInMinutes($dateBetween->setTime($this->startHour, $this->startMinute));
+                    $workingMinutes += $dateBetween->setTime($this->startHour, $this->startMinute)->diffInMinutes(Carbon::make($endDate));
 
                     continue;
                 }

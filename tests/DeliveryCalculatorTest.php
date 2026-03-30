@@ -28,7 +28,7 @@ class DeliveryCalculatorTest extends TestCase
         $app['config'] = new \Illuminate\Config\Repository([
             'cache' => [
                 'default' => 'array',
-                'stores' => [
+                'stores'  => [
                     'array' => ['driver' => 'array'],
                 ],
             ],
@@ -44,9 +44,9 @@ class DeliveryCalculatorTest extends TestCase
         Facade::setFacadeApplication($app);
 
         // Set up SQLite in-memory database
-        $capsule = new Capsule;
+        $capsule = new Capsule();
         $capsule->addConnection([
-            'driver' => 'sqlite',
+            'driver'   => 'sqlite',
             'database' => ':memory:',
         ]);
         $capsule->setAsGlobal();
@@ -76,7 +76,7 @@ class DeliveryCalculatorTest extends TestCase
     {
         Capsule::table('holidays')->insert([
             'start_date' => $startDate,
-            'end_date' => $endDate,
+            'end_date'   => $endDate,
         ]);
         Cache::flush();
     }

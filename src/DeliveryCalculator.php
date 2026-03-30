@@ -2,16 +2,15 @@
 
 namespace Contoweb\DeliveryCalculator;
 
-use Carbon\CarbonPeriod;
-use Contoweb\DeliveryCalculator\Holiday;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\Cache;
 
 class DeliveryCalculator
 {
     /**
      * Business start hour
-     * Example: 6 => 06:XX
+     * Example: 6 => 06:XX.
      *
      * @var int
      */
@@ -19,7 +18,7 @@ class DeliveryCalculator
 
     /**
      * Business start minute
-     * Example 45 => XX:45
+     * Example 45 => XX:45.
      *
      * @var int
      */
@@ -27,7 +26,7 @@ class DeliveryCalculator
 
     /**
      * Business end hour
-     * Example: 18 => 18:XX
+     * Example: 18 => 18:XX.
      *
      * @var int
      */
@@ -35,14 +34,14 @@ class DeliveryCalculator
 
     /**
      * Business end minute
-     * Example: 30 => XX:30
+     * Example: 30 => XX:30.
      *
      * @var int
      */
     protected $endMinute;
 
     /**
-     * Define start and end time for a new class instance
+     * Define start and end time for a new class instance.
      *
      * @param int $startHour
      * @param int $startMinute
@@ -58,10 +57,11 @@ class DeliveryCalculator
     }
 
     /**
-     * Check if a given DateTime is in business hours
+     * Check if a given DateTime is in business hours.
      *
-     * @param  \Carbon\Carbon $orderDateTime
-     * @return boolean
+     * @param \Carbon\Carbon $orderDateTime
+     *
+     * @return bool
      */
     public function isBusinessTime($orderDateTime)
     {
@@ -84,10 +84,10 @@ class DeliveryCalculator
     }
 
     /**
-     * Calculates a delivery DateTime form a given DateTime and duration in hours (considering business hours, weekends and holidays)
+     * Calculates a delivery DateTime form a given DateTime and duration in hours (considering business hours, weekends and holidays).
      *
-     * @param  \Carbon\Carbon $orderDateTime
-     * @param  integer $duration
+     * @param \Carbon\Carbon $orderDateTime
+     * @param int            $duration
      *
      * @return \Carbon\Carbon $deliveryDateTime
      */
@@ -146,8 +146,9 @@ class DeliveryCalculator
             $deliveryDateTime = $this->skipHolidays($deliveryDateTime, $holidays);
         }
 
-        if ($endTime < $deliveryDateTime)
+        if ($endTime < $deliveryDateTime) {
             $deliveryDateTime->addMinutes($offTime);
+        }
 
         // Skip weekend and holidays
         $deliveryDateTime = $this->skipHolidays($deliveryDateTime, $holidays);
@@ -160,6 +161,7 @@ class DeliveryCalculator
      *
      * @param Carbon $startDate
      * @param Carbon $endDate
+     *
      * @return float
      */
     public function getDurationInWorkingHours($startDate, $endDate)
@@ -249,6 +251,7 @@ class DeliveryCalculator
      *
      * @param Carbon $startDate
      * @param Carbon $endDate
+     *
      * @return float
      */
     public function getDurationInWorkingDays($startDate, $endDate)
@@ -259,7 +262,7 @@ class DeliveryCalculator
     }
 
     /**
-     * Creating date collection between two dates
+     * Creating date collection between two dates.
      *
      * @param string start date, time or datetime format
      * @param string end date, time or datetime format
@@ -270,7 +273,7 @@ class DeliveryCalculator
      */
     private function dateRange($first, $last, $step = '+1 day', $output_format = 'Y-m-d')
     {
-        $dates = array();
+        $dates = [];
         $current = strtotime($first);
         $last = strtotime($last);
 
@@ -283,13 +286,13 @@ class DeliveryCalculator
     }
 
     /**
-     * Checks and skips a day if the date is a holiday
+     * Checks and skips a day if the date is a holiday.
      *
      * @param Carbon\Carbon date time object
      * @param array holidays
-     * @param boolean setStartTime
-     * @param integer startHour
-     * @param integer startMinute
+     * @param bool setStartTime
+     * @param int startHour
+     * @param int startMinute
      *
      * @return Carbon\Carbon date time object
      */
@@ -307,7 +310,7 @@ class DeliveryCalculator
     }
 
     /**
-     * Fetch holidays from database
+     * Fetch holidays from database.
      *
      * @return array holidays
      */
@@ -327,7 +330,7 @@ class DeliveryCalculator
             $holidays[] = $this->dateRange($holidayPeriod->start_date, $holidayPeriod->end_date);
         }
 
-        return array_reduce($holidays, 'array_merge', array()); // Turn into one-dimensional array
+        return array_reduce($holidays, 'array_merge', []); // Turn into one-dimensional array
     }
 
     /**

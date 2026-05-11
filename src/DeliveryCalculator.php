@@ -5,6 +5,7 @@ namespace Contoweb\DeliveryCalculator;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
 
 class DeliveryCalculator
 {
@@ -319,11 +320,14 @@ class DeliveryCalculator
         // Load holidays from cache (or DB) in array
         $holidays = [];
 
-        if (Cache::has('delivery_calculator_holidays')) {
-            $holidayPeriods = Cache::get('delivery_calculator_holidays');
+        $cacheKey = Config::get('delivery-calculator.cache.key', 'delivery_calculator_holidays');
+        $cacheTtl = Config::get('delivery-calculator.cache.ttl', 86400);
+
+        if (Cache::has($cacheKey)) {
+            $holidayPeriods = Cache::get($cacheKey);
         } else {
             $holidayPeriods = Holiday::all();
-            Cache::put('delivery_calculator_holidays', $holidayPeriods);
+            Cache::put($cacheKey, $holidayPeriods, $cacheTtl);
         }
 
         foreach ($holidayPeriods as $holidayPeriod) {

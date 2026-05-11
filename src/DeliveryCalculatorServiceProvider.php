@@ -14,6 +14,10 @@ class DeliveryCalculatorServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->loadMigrationsFrom(__DIR__.'/migrations');
+
+        $this->publishes([
+            __DIR__.'/../config/delivery-calculator.php' => config_path('delivery-calculator.php'),
+        ], 'config');
     }
 
     /**
@@ -23,6 +27,9 @@ class DeliveryCalculatorServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/delivery-calculator.php',
+            'delivery-calculator'
+        );
     }
 }

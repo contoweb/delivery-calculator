@@ -9,6 +9,7 @@ use Illuminate\Container\Container;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Facade;
 use PHPUnit\Framework\TestCase;
 
@@ -32,6 +33,7 @@ class DeliveryCalculatorTest extends TestCase
                     'array' => ['driver' => 'array'],
                 ],
             ],
+            'delivery-calculator' => require __DIR__.'/../config/delivery-calculator.php',
         ]);
         $app->singleton('cache', function ($app) {
             return new CacheManager($app);
@@ -338,5 +340,30 @@ class DeliveryCalculatorTest extends TestCase
         $end = Carbon::create(2025, 1, 8, 12, 30, 0);
 
         $this->assertEquals(0.5, $this->calculator->getDurationInWorkingDays($start, $end));
+    }
+
+    // --- Caching ---
+
+    public function testHolidaysAreCached(): void
+    {
+        // Seed a holiday and trigger a calculator call so the cache is populated.
+        $this->seedHoliday('2025-01-08', '2025-01-08');
+        $this->assertFalse($this->calculator->isBusinessTime(Carbon::create(2025, 1, 8, 10, 0, 0)));
+
+        // Cache key should now exist.
+        $this->assertTrue(Cache::has(Config::get('delivery-calculator.cache.key')));
+
+        // Insert another holiday directly without flushing the cache.
+        Capsule::table('holidays')->insert([
+            'start_date' => '2025-01-09',
+            'end_date'   => '2025-01-09',
+        ]);
+
+        // The new holiday must NOT be visible because the cached set is used.
+        $this->assertTrue($this->calculator->isBusinessTime(Carbon::create(2025, 1, 9, 10, 0, 0)));
+
+        // After flushing the cache, the freshly inserted holiday is picked up.
+        Cache::flush();
+        $this->assertFalse($this->calculator->isBusinessTime(Carbon::create(2025, 1, 9, 10, 0, 0)));
     }
 }
